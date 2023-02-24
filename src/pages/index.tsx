@@ -1,8 +1,27 @@
 import Head from 'next/head'
 import Image from "next/image";
+import axios from "axios";
+import { useState } from "react";
+import { BsSearch } from "react-icons/bs";
 
 export default function Home() {
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=dubai&appid=${process.env.NEXT_PUBLIC_API_KEY}`;
+  const [city, setCity] = useState("");
+  const [weather, setWeather] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
+  console.log(city);
+
+  const fetchWeather = (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    setLoading(true);
+    axios.get(url).then((res) => {
+      setWeather(res.data);
+      console.log(res.data);
+    });
+    setCity("");
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -12,6 +31,38 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      {/* Overlay */}
+      <div className="absolute top-0 left-0 right-0 bottom-0 bg-black/40 z-[1]" />
+      {/* Background image */}
+      <Image
+        src="https://images.unsplash.com/photo-1518100386603-9aea69956bfc?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxzZWFyY2h8N3x8d2hlYXRlcnxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60"
+        layout="fill"
+        alt={""}
+        className="object-cover"
+        style={{ zIndex: -1 }}
+      />
+
+      {/* Search */}
+      <div className="relative flex justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10">
+        <form
+          onSubmit={fetchWeather}
+          className="flex justify-between items-center w-full m-auto p-3 bg-transparent border border-gray-300 text-white rounded-2xl"
+        >
+          <div>
+            <input
+              onChange={(e) => setCity(e.target.value)}
+              className="bg-transparent border-none text-white focus:outline-none text-2xl placeholder"
+              type="text"
+              placeholder="Search City"
+            />
+          </div>
+          <button onClick={fetchWeather}>
+            <BsSearch size={20} />
+          </button>
+        </form>
+      </div>
+
+      {/* Weather */}
     </div>
   );
 }
