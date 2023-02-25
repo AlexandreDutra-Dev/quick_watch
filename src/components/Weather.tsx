@@ -28,7 +28,7 @@ export const Weather: React.FC<{ data: WeatherData }> = ({ data }) => {
         <div className="flex flex-col items-center">
           <Image
             src={`http://openweathermap.org/img/wn/${weather[0].icon}@2x.png`}
-            alt="/"
+            alt={weather[0].main}
             width="100"
             height="100"
           />
