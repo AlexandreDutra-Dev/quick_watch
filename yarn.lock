@@ -3733,6 +3733,11 @@ jest-snapshot@^29.4.3:
     pretty-format "^29.4.3"
     semver "^7.3.5"
 
+jest-static-stubs@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.npmjs.org/jest-static-stubs/-/jest-static-stubs-0.0.1.tgz"
+  integrity sha512-ku5H+OQbiNxOHWIcua1sCdcJH3xUxmHyFBZCtk/uHFsZsczIpFD/nDdsTtlPlf/oIuh0ni3IRnsebcDjv9BVww==
+
 jest-util@^29.0.0, jest-util@^29.4.3:
   version "29.4.3"
   resolved "https://registry.npmjs.org/jest-util/-/jest-util-29.4.3.tgz"
