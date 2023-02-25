@@ -6,7 +6,7 @@ export const Spinner = () => {
     <>
       <Image
         className="w-[200px] m-auto block"
-        src="/images/spinner.gif"
+        src="/../public/spinner.gif"
         alt="Loading..."
         width="200"
         height="200"
