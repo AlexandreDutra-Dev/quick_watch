@@ -3,7 +3,7 @@ import Image from "next/image";
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
-import Spinner from "../components/Spinner";
+import { Spinner } from "../components/Spinner";
 import { Weather } from "@/components/Weather";
 import { SEARCH_API_ENDPOINT, WEATHER_API_ENDPOINT } from "./api/api";
 
