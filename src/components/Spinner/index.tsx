@@ -1,5 +1,4 @@
 import React from "react";
-import spinner from "/public/spinner.gif";
 import Image from "next/image";
 
 export const Spinner = () => {
@@ -7,8 +6,10 @@ export const Spinner = () => {
     <>
       <Image
         className="w-[200px] m-auto block"
-        src={spinner}
+        src="/images/spinner.gif"
         alt="Loading..."
+        width="200"
+        height="200"
       />
     </>
   );
