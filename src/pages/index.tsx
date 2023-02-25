@@ -1,10 +1,11 @@
 import Head from "next/head";
 import Image from "next/image";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { BsSearch } from "react-icons/bs";
 import Spinner from "../components/Spinner";
 import { Weather } from "@/components/Weather";
+import { SEARCH_API_ENDPOINT, WEATHER_API_ENDPOINT } from "./api/api";
 
 interface WeatherApiResponse {
   main: {
@@ -26,17 +27,35 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<WeatherApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  const [isFirstRender, setIsFirstRender] = useState(true);
 
-  const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=imperial&appid=${process.env.NEXT_PUBLIC_WEATHER_KEY}`;
+  useEffect(() => {
+    if (isFirstRender && !city) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          axios
+            .get(SEARCH_API_ENDPOINT(latitude, longitude))
+            .then((response) => {
+              const cityName = response.data.name;
+              setCity(cityName);
+              fetchWeather(cityName);
+            });
+        },
+        () => {
+          console.error("Não foi possível obter a localização do usuário");
+        }
+      );
+      setIsFirstRender(false);
+    }
+  }, [isFirstRender, city]);
 
-  const fetchWeather = (e: { preventDefault: () => void }) => {
-    e.preventDefault();
+  const fetchWeather = (city: string) => {
     setLoading(true);
-    axios.get(url).then((response) => {
+    axios.get(WEATHER_API_ENDPOINT(city)).then((response) => {
       setWeather(response.data);
       setLoading(false);
     });
-    setCity("");
   };
 
   return (
@@ -55,18 +74,25 @@ export default function Home() {
       />
       <div className="relative flex justify-between items-center max-w-[500px] w-full m-auto pt-4 px-4 text-white z-10">
         <form
-          onSubmit={fetchWeather}
+          onSubmit={(e) => {
+            e.preventDefault();
+            fetchWeather(city);
+          }}
           className="flex justify-between items-center w-full m-auto p-3 bg-transparent border border-gray-300 text-white rounded-2xl"
         >
           <div>
             <input
+              value={city}
               onChange={(e) => setCity(e.target.value)}
               className="bg-transparent border-none text-white focus:outline-none text-2xl"
               type="text"
               placeholder="Procure por uma cidade"
             />
           </div>
-          <button onClick={fetchWeather}>
+          <button
+            onClick={() => fetchWeather(city)}
+            className="focus:outline-none"
+          >
             <BsSearch size={20} />
           </button>
         </form>
