@@ -7,6 +7,7 @@ import { BsSearch } from "react-icons/bs";
 import { Weather } from "@/components/Weather";
 import { SEARCH_API_ENDPOINT, WEATHER_API_ENDPOINT } from "../api/api";
 import { Spinner } from "@/components/Spinner";
+import { AlertModal } from "./HomeModal";
 
 interface WeatherApiResponse {
   main: {
@@ -28,7 +29,11 @@ export default function Home() {
   const [city, setCity] = useState("");
   const [weather, setWeather] = useState<WeatherApiResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  const [isFirstRender, setIsFirstRender] = useState<boolean>(true);
+  const [isFirstRender, setIsFirstRender] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const closeModal = () => {
+    setShowModal(false);
+  };
 
   useEffect(() => {
     if (isFirstRender && !city) {
@@ -53,10 +58,20 @@ export default function Home() {
 
   const fetchWeather = (city: string) => {
     setLoading(true);
-    axios.get(WEATHER_API_ENDPOINT(city)).then((response) => {
-      setWeather(response.data);
-      setLoading(false);
-    });
+    axios
+      .get(WEATHER_API_ENDPOINT(city))
+      .then((response) => {
+        setWeather(response.data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        if (error.response && error.response.status === 404) {
+          setShowModal(true);
+        } else {
+          console.error(error);
+        }
+        setLoading(false);
+      });
   };
 
   return (
@@ -103,6 +118,8 @@ export default function Home() {
       ) : (
         weather && weather.main && <Weather data={weather} />
       )}
+      {showModal && <AlertModal onClose={closeModal} />}
     </div>
   );
 }
+
