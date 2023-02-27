@@ -19,13 +19,29 @@ interface WeatherData {
 
 export const Weather: React.FC<{ data: WeatherData }> = ({ data }) => {
   const { main, weather, wind, name } = data;
-  const { temp, feels_like, humidity } = main;
+  const { temp, humidity } = main;
   const celsiusTemp = (((temp - 32) * 5) / 9).toFixed(0);
   const kmhWindSpeed = (wind.speed * 1.60934).toFixed(0);
   const translateWeather = (weatherValue: string) => {
     switch (weatherValue) {
       case "Clouds":
         return "Nuvens";
+      case "Clear":
+        return "Céu Limpo";
+      case "Rain":
+        return "Chuva";
+      case "Snow":
+        return "Neve";
+      case "Thunderstorm":
+        return "Tempestade";
+      case "Drizzle":
+        return "Garoa";
+      case "Mist":
+        return "Névoa";
+      case "Smoke":
+        return "Fumaça";
+      case "Haze":
+        return "Neblina";
       default:
         return weatherValue;
     }
