@@ -31,6 +31,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [showModal, setShowModal] = useState(false);
+
+
   const closeModal = () => {
     setShowModal(false);
   };
@@ -48,10 +50,11 @@ export default function Home() {
               fetchWeather(cityName);
             });
         },
-        () => {
-          console.error("Não foi possível obter a localização do usuário");
+        (error) => {
+          console.error(error);
         }
       );
+
       setIsFirstRender(false);
     }
   }, [isFirstRender, city]);

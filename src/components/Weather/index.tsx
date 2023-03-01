@@ -17,11 +17,38 @@ interface WeatherData {
   name: string;
 }
 
+interface ClockProps {
+  format: string;
+}
+
 export const Weather: React.FC<{ data: WeatherData }> = ({ data }) => {
   const { main, weather, wind, name } = data;
   const { temp, humidity } = main;
   const celsiusTemp = (((temp - 32) * 5) / 9).toFixed(0);
   const kmhWindSpeed = (wind.speed * 1.60934).toFixed(0);
+  class Clock extends React.Component<ClockProps> {
+    state = {
+      time: new Date().toLocaleTimeString(),
+    };
+    componentDidMount() {
+      setInterval(() => {
+        this.tick();
+      }, 1000);
+    }
+
+    tick() {
+      this.setState({
+        time: new Date().toLocaleTimeString(),
+      });
+    }
+    render() {
+      const { format } = this.props;
+      const { time } = this.state;
+
+      return <div>{time}</div>;
+    }
+  }
+
   const translateWeather = (weatherValue: string) => {
     switch (weatherValue) {
       case "Clouds":
@@ -62,6 +89,12 @@ export const Weather: React.FC<{ data: WeatherData }> = ({ data }) => {
         </div>
         <p className="text-9xl">{celsiusTemp}&#176;</p>
       </div>
+      <div className="relative flex justify-between pt-12 ml-auto">
+        <div className="text-9xl">
+          <Clock format="HH:mm:ss" />
+        </div>
+      </div>
+
       {/* Bottom */}
       <div className="bg-black/50 relative p-8 rounded-md">
         <p className="text-2xl text-center pb-6">Tempo em {name}</p>
